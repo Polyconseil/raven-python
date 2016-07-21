@@ -17,7 +17,12 @@ import time
 class Command(BaseCommand):
     help = 'Commands to interact with the Sentry client'
 
-    option_list = BaseCommand.option_list + (
+    # Very quick and dirty patch to bypass the removal
+    # of `BaseCommand.option_list` in Django 1.10.
+    # The proper fix will be to use `argparse`, but we'll
+    # let the `raven-python` folks deal with this ^_^
+    
+    option_list = getattr(BaseCommand, 'option_list', ()) + (
         make_option(
             "--data", action="callback", callback=store_json,
             type="string", nargs=1, dest="data"),
